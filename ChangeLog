@@ -1,3 +1,8 @@
+2003-05-15 15:38  source
+
+	* Added generated and support files in case we do not have automake
+	  autoconf and libtool installed on the machine (pvk)
+	
 2003-05-15 15:22  source
 
 	* Committed initial source code into cvs (pmn)
