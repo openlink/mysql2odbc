@@ -402,7 +402,7 @@ _alloc_fields (MYSQL *mysql, unsigned int field_count)
 {
   MYSQL_FIELD *f;
 
-  _free_fields (mysql);
+/*_free_fields (mysql);*/
   if (field_count)
     {
       f = (MYSQL_FIELD *) calloc (field_count, sizeof (MYSQL_FIELD));
@@ -928,6 +928,7 @@ _impl_fetch_row (MYSQL_RES *res)
 	{
 	  res->current_row = res->data_cursor->data;
 	  res->data_cursor = res->data_cursor->next;
+	  res->row_count++;
 	}
       return res->current_row;
     }
@@ -1024,6 +1025,7 @@ mysql_close (MYSQL *mysql)
 unsigned int
 mysql_errno (MYSQL *mysql)
 {
+  TRACE ("mysql_errno");
   return mysql->net.last_errno;
 }
 
@@ -1031,6 +1033,7 @@ mysql_errno (MYSQL *mysql)
 char *
 mysql_error (MYSQL *mysql)
 {
+  TRACE ("mysql_error");
   return mysql->net.last_error;
 }
 
@@ -1038,6 +1041,7 @@ mysql_error (MYSQL *mysql)
 char *
 mysql_info (MYSQL *mysql)
 {
+  TRACE ("mysql_info");
   return mysql->info;
 }
 
@@ -1105,6 +1109,7 @@ mysql_store_result (MYSQL *mysql)
 MYSQL_RES *
 mysql_list_dbs (MYSQL *mysql, const char *wild)
 {
+  TRACE ("mysql_list_dbs UNIMPLEMENTED");
   UNIMPLEMENTED (MYSQL_RES *);
 }
 
@@ -1112,6 +1117,7 @@ mysql_list_dbs (MYSQL *mysql, const char *wild)
 MYSQL_RES *
 mysql_list_tables (MYSQL *mysql, const char *wild)
 {
+  TRACE ("mysql_list_tables UNIMPLEMENTED");
   UNIMPLEMENTED (MYSQL_RES *);
 }
 
@@ -1119,6 +1125,7 @@ mysql_list_tables (MYSQL *mysql, const char *wild)
 MYSQL_RES *
 mysql_list_fields (MYSQL *mysql, const char *table, const char *wild)
 {
+  TRACE ("mysql_list_fields UNIMPLEMENTED");
   UNIMPLEMENTED (MYSQL_RES *);
 }
 
@@ -1126,6 +1133,7 @@ mysql_list_fields (MYSQL *mysql, const char *table, const char *wild)
 MYSQL_RES *
 mysql_list_processes (MYSQL *mysql)
 {
+  TRACE ("mysql_list_processes UNIMPLEMENTED");
   UNIMPLEMENTED (MYSQL_RES *);
 }
 
@@ -1150,7 +1158,7 @@ my_ulonglong
 mysql_num_rows (MYSQL_RES *res)
 {
   TRACE ("mysql_row_count");
-  return res->row_count;
+  return res->row_count; /* This is not correct before read all data */
 }
 
 
@@ -1221,6 +1229,7 @@ mysql_insert_id (MYSQL *mysql)
 void
 mysql_data_seek (MYSQL_RES *res, my_ulonglong offset)
 {
+  TRACE ("mysql_data_seek UNIMPLEMENTED");
   UNIMPLEMENTED_VOID;
 }
 
@@ -1263,16 +1272,45 @@ mysql_fetch_row (MYSQL_RES *res)
 unsigned long *
 mysql_fetch_lengths (MYSQL_RES *res)
 {
-  UNIMPLEMENTED (unsigned long *);
+  unsigned long *lengths;
+  int i;
+  MYSQL_ROW column;
+
+  TRACE ("mysql_fetch_lengths");
+
+  if (!(column=res->current_row))               
+    return 0;                                   /* Something is wrong */
+
+  if (res->data)
+    {   
+      lengths=res->lengths;
+      for (i = 0 ; i < res->field_count ; column++,i ++)
+	{
+	  if (!*column)
+	    {     
+	      lengths[i]=0;                             /* Null */
+	      continue;
+	    }
+	  lengths[i] = (unsigned int) strlen (*column);
+	}
+    }
+
+  return res->lengths;
 }
 
 
 MYSQL_FIELD *
 mysql_fetch_field (MYSQL_RES *res)
 {
+  TRACE ("mysql_fetch_field");
+
+#ifdef DEBUG
+  fprintf (stdout, "current_field (%i) field_count (%i) \n", res->current_field, res->field_count);
+#endif  
+
   if (res->current_field >= res->field_count)
     return NULL;
-
+  
   return &res->fields[res->current_field++];
 }
 
@@ -1284,6 +1322,7 @@ mysql_change_user (
     const char *passwd,
     const char *db)
 {
+  TRACE ("mysql_change_user UNIMPLEMENTED");
   UNIMPLEMENTED (my_bool);
 }
 
@@ -1291,20 +1330,24 @@ mysql_change_user (
 int
 mysql_select_db (MYSQL *mysql, const char *db)
 {
-  UNIMPLEMENTED_FAIL;
+  TRACE ("mysql_select_db");
+   mysql->db = strdup (db);
+   return 0;
 }
 
 
 int
 mysql_create_db (MYSQL *mysql, const char *DB)
 {
-  UNIMPLEMENTED_FAIL;
+  TRACE ("mysql_select_db UNIMPLEMENTED");
+  return 0;
 }
 
 
 int
 mysql_drop_db (MYSQL *mysql, const char *DB)
 {
+  TRACE ("mysql_drop_db UNIMPLEMENTED");
   UNIMPLEMENTED_FAIL;
 }
 
@@ -1312,6 +1355,7 @@ mysql_drop_db (MYSQL *mysql, const char *DB)
 int
 mysql_shutdown (MYSQL *mysql)
 {
+  TRACE ("mysql_shutdown UNIMPLEMENTED");
   UNIMPLEMENTED_OK;
 }
 
@@ -1319,6 +1363,7 @@ mysql_shutdown (MYSQL *mysql)
 char *
 mysql_get_server_info (MYSQL *mysql)
 {
+  TRACE ("mysql_get_server_info");
   return mysql->server_version;
 }
 
@@ -1326,6 +1371,7 @@ mysql_get_server_info (MYSQL *mysql)
 char *
 mysql_get_client_info (void)
 {
+  TRACE ("mysql_get_client_info");
   return MYSQL_SERVER_VERSION;
 }
 
@@ -1333,6 +1379,7 @@ mysql_get_client_info (void)
 char *
 mysql_get_host_info (MYSQL *mysql)
 {
+  TRACE ("mysql_get_host_info");
   return mysql->host_info;
 }
 
@@ -1340,6 +1387,7 @@ mysql_get_host_info (MYSQL *mysql)
 unsigned int
 mysql_get_proto_info (MYSQL *mysql)
 {
+  TRACE ("mysql_get_proto_info");
   return mysql->protocol_version;
 }
 
@@ -1347,6 +1395,7 @@ mysql_get_proto_info (MYSQL *mysql)
 unsigned long
 mysql_thread_id (MYSQL *mysql)
 {
+  TRACE ("mysql_thread_id");
   return (mysql)->thread_id;
 }
 
@@ -1354,6 +1403,7 @@ mysql_thread_id (MYSQL *mysql)
 unsigned int
 mysql_thread_safe (void)
 {
+  TRACE ("mysql_thread_safe");
   return 1;
 }
 
@@ -1361,6 +1411,7 @@ mysql_thread_safe (void)
 const char *
 mysql_character_set_name (MYSQL *mysql)
 {
+  TRACE ("mysql_character_set_name");
   return "latin1";
 }
 
@@ -1368,6 +1419,7 @@ mysql_character_set_name (MYSQL *mysql)
 int
 mysql_dump_debug_info (MYSQL *mysql)
 {
+  TRACE ("mysql_dump_debug_info UNIMPLEMENTED");
   UNIMPLEMENTED (int);
 }
 
@@ -1375,6 +1427,7 @@ mysql_dump_debug_info (MYSQL *mysql)
 int
 mysql_refresh (MYSQL *mysql, unsigned int refresh_options)
 {
+  TRACE ("mysql_refresh UNIMPLEMENTED");
   UNIMPLEMENTED (int);
 }
 
@@ -1382,6 +1435,7 @@ mysql_refresh (MYSQL *mysql, unsigned int refresh_options)
 int
 mysql_kill (MYSQL *mysql, unsigned long pid)
 {
+  TRACE ("mysql_kill UNIMPLEMENTED");
   UNIMPLEMENTED (int);
 }
 
@@ -1389,6 +1443,7 @@ mysql_kill (MYSQL *mysql, unsigned long pid)
 int
 mysql_ping (MYSQL *mysql)
 {
+  TRACE ("mysql_ping UNIMPLEMENTED");
   UNIMPLEMENTED (int);
 }
 
@@ -1396,6 +1451,7 @@ mysql_ping (MYSQL *mysql)
 char *
 mysql_stat (MYSQL *mysql)
 {
+  TRACE ("mysql_stat UNIMPLEMENTED");
   UNIMPLEMENTED (char *);
 }
 
@@ -1403,6 +1459,7 @@ mysql_stat (MYSQL *mysql)
 int
 mysql_options (MYSQL *mysql, enum mysql_option option, const char *arg)
 {
+  TRACE ("mysql_options UNIMPLEMENTED");
   UNIMPLEMENTED (int);
 }
 
@@ -1410,6 +1467,7 @@ mysql_options (MYSQL *mysql, enum mysql_option option, const char *arg)
 unsigned long
 mysql_escape_string (char *to, const char *from, unsigned long from_length)
 {
+  TRACE ("mysql_escape_string UNIMPLEMENTED");
   UNIMPLEMENTED (unsigned long);
 }
 
@@ -1418,6 +1476,7 @@ unsigned long
 mysql_real_escape_string (MYSQL *mysql,
     char *to, const char *from, unsigned long length)
 {
+  TRACE ("mysql_real_escape_string UNIMPLEMENTED");
   UNIMPLEMENTED (unsigned long);
 }
 
@@ -1425,6 +1484,7 @@ mysql_real_escape_string (MYSQL *mysql,
 void
 mysql_debug (const char *debug)
 {
+  TRACE ("mysql_debug UNIMPLEMENTED");
   UNIMPLEMENTED_VOID;
 }
 
@@ -1438,6 +1498,7 @@ mysql_odbc_escape_string (MYSQL *mysql,
     void *param,
     char *(*extend_buffer) (void *, char *to, unsigned long *length))
 {
+  TRACE ("mysql_odbc_escape_string UNIMPLEMENTED");
   UNIMPLEMENTED (char *);
 }
 
@@ -1445,6 +1506,7 @@ mysql_odbc_escape_string (MYSQL *mysql,
 void
 myodbc_remove_escape (MYSQL *mysql, char *name)
 {
+  TRACE ("myodbc_remove_escape UNIMPLEMENTED");
   UNIMPLEMENTED_VOID;
 }
 
@@ -1452,6 +1514,7 @@ myodbc_remove_escape (MYSQL *mysql, char *name)
 void
 my_init (void)
 {
+  TRACE ("my_init UNIMPLEMENTED");
   UNIMPLEMENTED_VOID;
 }
 
@@ -1463,6 +1526,7 @@ load_defaults (
     int *argc,
     char ***argv)
 {
+  TRACE ("load_defaults UNIMPLEMENTED");
   UNIMPLEMENTED_VOID;
 }
 
@@ -1470,6 +1534,7 @@ load_defaults (
 void
 print_defaults (const char *conf_file, const char **groups)
 {
+  TRACE ("print_defaults UNIMPLEMENTED");
   UNIMPLEMENTED_VOID;
 }
 
@@ -1477,5 +1542,6 @@ print_defaults (const char *conf_file, const char **groups)
 void
 free_defaults (void)
 {
+  TRACE ("free_defaults UNIMPLEMENTED");
   UNIMPLEMENTED_VOID;
 }
