@@ -159,6 +159,11 @@ main (int argc, char **argv)
 	continue;
       if (!strcmp (line, "quit"))
 	break;
+
+      /* Strip trailling semicolons */
+      if (line[strlen(line)-1]==';')
+        line[strlen(line)-1]='\0';
+
       query (mh, line);
     }
 
