@@ -24,6 +24,9 @@
 
 #ifdef WIN32
 # include <windows.h>
+# include <config-win.h>
+#else
+# define STDCALL
 #endif
 #include <sql.h>
 #include <sqlext.h>
@@ -586,7 +589,7 @@ _impl_init (MYSQL *mysql)
 	return NULL;
       mysql->free_me = 1;
     }
-  memset (mysql, 0, sizeof (MYSQL));
+  memset (mysql, 0, sizeof (mysql));
 
   return mysql;
 }
@@ -965,7 +968,7 @@ _impl_fetch_row (MYSQL_RES *res)
 /******************************************************************************/
 
 
-MYSQL *
+MYSQL * STDCALL
 mysql_init (MYSQL *mysql)
 {
   MYSQL *res;
@@ -977,7 +980,7 @@ mysql_init (MYSQL *mysql)
 }
 
 
-MYSQL *
+MYSQL * STDCALL
 mysql_connect (
     MYSQL *mysql,
     const char *host,
@@ -993,7 +996,7 @@ mysql_connect (
 }
 
 
-MYSQL *
+MYSQL * STDCALL
 mysql_real_connect (
     MYSQL *mysql,
     const char *host,
@@ -1014,7 +1017,7 @@ mysql_real_connect (
 }
 
 
-void 
+void STDCALL 
 mysql_close (MYSQL *mysql)
 {
   TRACE ("mysql_close");
@@ -1022,7 +1025,7 @@ mysql_close (MYSQL *mysql)
 }
 
 
-unsigned int
+unsigned int STDCALL
 mysql_errno (MYSQL *mysql)
 {
   TRACE ("mysql_errno");
@@ -1030,7 +1033,7 @@ mysql_errno (MYSQL *mysql)
 }
 
 
-char *
+char * STDCALL
 mysql_error (MYSQL *mysql)
 {
   TRACE ("mysql_error");
@@ -1038,7 +1041,7 @@ mysql_error (MYSQL *mysql)
 }
 
 
-char *
+char * STDCALL
 mysql_info (MYSQL *mysql)
 {
   TRACE ("mysql_info");
@@ -1046,7 +1049,7 @@ mysql_info (MYSQL *mysql)
 }
 
 
-int
+int STDCALL
 mysql_query (MYSQL *mysql, const char *q)
 {
   int rc;
@@ -1057,7 +1060,7 @@ mysql_query (MYSQL *mysql, const char *q)
 }
 
 
-int
+int STDCALL
 mysql_send_query (MYSQL *mysql, const char *q, unsigned int length)
 {
   TRACE ("mysql_send_query");
@@ -1065,7 +1068,7 @@ mysql_send_query (MYSQL *mysql, const char *q, unsigned int length)
 }
 
 
-int
+int STDCALL
 mysql_read_query_result (MYSQL *mysql)
 {
   TRACE ("mysql_read_query_result");
@@ -1073,7 +1076,7 @@ mysql_read_query_result (MYSQL *mysql)
 }
 
 
-int
+int STDCALL
 mysql_real_query (MYSQL *mysql, const char *q, unsigned int length)
 {
   int rc;
@@ -1084,7 +1087,7 @@ mysql_real_query (MYSQL *mysql, const char *q, unsigned int length)
 }
 
 
-MYSQL_RES *
+MYSQL_RES * STDCALL
 mysql_use_result (MYSQL *mysql)
 {
   MYSQL_RES *res;
@@ -1095,7 +1098,7 @@ mysql_use_result (MYSQL *mysql)
 }
 
 
-MYSQL_RES *
+MYSQL_RES * STDCALL
 mysql_store_result (MYSQL *mysql)
 {
   MYSQL_RES *res;
@@ -1106,7 +1109,7 @@ mysql_store_result (MYSQL *mysql)
 }
 
 
-MYSQL_RES *
+MYSQL_RES * STDCALL
 mysql_list_dbs (MYSQL *mysql, const char *wild)
 {
   TRACE ("mysql_list_dbs UNIMPLEMENTED");
@@ -1114,7 +1117,7 @@ mysql_list_dbs (MYSQL *mysql, const char *wild)
 }
 
 
-MYSQL_RES *
+MYSQL_RES * STDCALL
 mysql_list_tables (MYSQL *mysql, const char *wild)
 {
   TRACE ("mysql_list_tables UNIMPLEMENTED");
@@ -1122,7 +1125,7 @@ mysql_list_tables (MYSQL *mysql, const char *wild)
 }
 
 
-MYSQL_RES *
+MYSQL_RES * STDCALL
 mysql_list_fields (MYSQL *mysql, const char *table, const char *wild)
 {
   TRACE ("mysql_list_fields UNIMPLEMENTED");
@@ -1130,7 +1133,7 @@ mysql_list_fields (MYSQL *mysql, const char *table, const char *wild)
 }
 
 
-MYSQL_RES *
+MYSQL_RES * STDCALL
 mysql_list_processes (MYSQL *mysql)
 {
   TRACE ("mysql_list_processes UNIMPLEMENTED");
@@ -1138,7 +1141,7 @@ mysql_list_processes (MYSQL *mysql)
 }
 
 
-void
+void STDCALL
 mysql_free_result (MYSQL_RES *res)
 {
   TRACE ("mysql_free_result");
@@ -1146,7 +1149,7 @@ mysql_free_result (MYSQL_RES *res)
 }
 
 
-my_bool
+my_bool STDCALL
 mysql_eof (MYSQL_RES *res)
 {
   TRACE ("mysql_eof");
@@ -1154,7 +1157,7 @@ mysql_eof (MYSQL_RES *res)
 }
 
 
-my_ulonglong
+my_ulonglong STDCALL
 mysql_num_rows (MYSQL_RES *res)
 {
   TRACE ("mysql_row_count");
@@ -1162,7 +1165,7 @@ mysql_num_rows (MYSQL_RES *res)
 }
 
 
-unsigned int
+unsigned int STDCALL
 mysql_num_fields (MYSQL_RES *res)
 {
   TRACE ("mysql_num_fields");
@@ -1170,7 +1173,7 @@ mysql_num_fields (MYSQL_RES *res)
 }
 
 
-MYSQL_FIELD *
+MYSQL_FIELD * STDCALL
 mysql_fetch_field_direct (MYSQL_RES *res, unsigned int fieldnr)
 {
   TRACE ("mysql_fetch_field_direct");
@@ -1178,7 +1181,7 @@ mysql_fetch_field_direct (MYSQL_RES *res, unsigned int fieldnr)
 }
 
 
-MYSQL_FIELD *
+MYSQL_FIELD * STDCALL
 mysql_fetch_fields (MYSQL_RES *res)
 {
   TRACE ("mysql_fetch_fields");
@@ -1186,7 +1189,7 @@ mysql_fetch_fields (MYSQL_RES *res)
 }
 
 
-MYSQL_ROWS *
+MYSQL_ROWS * STDCALL
 mysql_row_tell (MYSQL_RES *res)
 {
   TRACE ("mysql_row_tell");
@@ -1194,7 +1197,7 @@ mysql_row_tell (MYSQL_RES *res)
 }
 
 
-unsigned int
+unsigned int STDCALL
 mysql_field_tell (MYSQL_RES *res)
 {
   TRACE ("mysql_field_tell");
@@ -1202,7 +1205,7 @@ mysql_field_tell (MYSQL_RES *res)
 }
 
 
-unsigned int
+unsigned int 
 mysql_field_count (MYSQL *mysql)
 {
   TRACE ("mysql_field_count");
@@ -1210,7 +1213,7 @@ mysql_field_count (MYSQL *mysql)
 }
 
 
-my_ulonglong
+my_ulonglong STDCALL
 mysql_affected_rows (MYSQL *mysql)
 {
   TRACE ("mysql_affected_rows");
@@ -1218,7 +1221,7 @@ mysql_affected_rows (MYSQL *mysql)
 }
 
 
-my_ulonglong
+my_ulonglong STDCALL
 mysql_insert_id (MYSQL *mysql)
 {
   TRACE ("mysql_insert_id");
@@ -1226,7 +1229,7 @@ mysql_insert_id (MYSQL *mysql)
 }
 
 
-void
+void STDCALL
 mysql_data_seek (MYSQL_RES *res, my_ulonglong offset)
 {
   TRACE ("mysql_data_seek UNIMPLEMENTED");
@@ -1234,7 +1237,7 @@ mysql_data_seek (MYSQL_RES *res, my_ulonglong offset)
 }
 
 
-MYSQL_ROW_OFFSET
+MYSQL_ROW_OFFSET STDCALL
 mysql_row_seek (MYSQL_RES *res, MYSQL_ROW_OFFSET offset)
 {
   MYSQL_ROW_OFFSET old;
@@ -1248,7 +1251,7 @@ mysql_row_seek (MYSQL_RES *res, MYSQL_ROW_OFFSET offset)
 }
 
 
-MYSQL_FIELD_OFFSET
+MYSQL_FIELD_OFFSET STDCALL
 mysql_field_seek (MYSQL_RES *res, MYSQL_FIELD_OFFSET offset)
 {
   MYSQL_FIELD_OFFSET old;
@@ -1261,7 +1264,7 @@ mysql_field_seek (MYSQL_RES *res, MYSQL_FIELD_OFFSET offset)
 }
 
 
-MYSQL_ROW
+MYSQL_ROW STDCALL
 mysql_fetch_row (MYSQL_RES *res)
 {
   TRACE ("mysql_fetch_row");
@@ -1269,11 +1272,11 @@ mysql_fetch_row (MYSQL_RES *res)
 }
 
 
-unsigned long *
+unsigned long * STDCALL
 mysql_fetch_lengths (MYSQL_RES *res)
 {
   unsigned long *lengths;
-  int i;
+  unsigned int i;
   MYSQL_ROW column;
 
   TRACE ("mysql_fetch_lengths");
@@ -1299,7 +1302,7 @@ mysql_fetch_lengths (MYSQL_RES *res)
 }
 
 
-MYSQL_FIELD *
+MYSQL_FIELD * STDCALL
 mysql_fetch_field (MYSQL_RES *res)
 {
   TRACE ("mysql_fetch_field");
@@ -1315,7 +1318,7 @@ mysql_fetch_field (MYSQL_RES *res)
 }
 
 
-my_bool
+my_bool STDCALL
 mysql_change_user (
     MYSQL *mysql,
     const char *user,
@@ -1327,7 +1330,7 @@ mysql_change_user (
 }
 
 
-int
+int STDCALL
 mysql_select_db (MYSQL *mysql, const char *db)
 {
   TRACE ("mysql_select_db");
@@ -1336,7 +1339,7 @@ mysql_select_db (MYSQL *mysql, const char *db)
 }
 
 
-int
+int STDCALL
 mysql_create_db (MYSQL *mysql, const char *DB)
 {
   TRACE ("mysql_select_db UNIMPLEMENTED");
@@ -1344,7 +1347,7 @@ mysql_create_db (MYSQL *mysql, const char *DB)
 }
 
 
-int
+int STDCALL
 mysql_drop_db (MYSQL *mysql, const char *DB)
 {
   TRACE ("mysql_drop_db UNIMPLEMENTED");
@@ -1352,7 +1355,7 @@ mysql_drop_db (MYSQL *mysql, const char *DB)
 }
 
 
-int
+int STDCALL
 mysql_shutdown (MYSQL *mysql)
 {
   TRACE ("mysql_shutdown UNIMPLEMENTED");
@@ -1360,7 +1363,7 @@ mysql_shutdown (MYSQL *mysql)
 }
 
 
-char *
+char * STDCALL
 mysql_get_server_info (MYSQL *mysql)
 {
   TRACE ("mysql_get_server_info");
@@ -1368,7 +1371,7 @@ mysql_get_server_info (MYSQL *mysql)
 }
 
 
-char *
+char * STDCALL
 mysql_get_client_info (void)
 {
   TRACE ("mysql_get_client_info");
@@ -1376,7 +1379,7 @@ mysql_get_client_info (void)
 }
 
 
-char *
+char * STDCALL
 mysql_get_host_info (MYSQL *mysql)
 {
   TRACE ("mysql_get_host_info");
@@ -1384,7 +1387,7 @@ mysql_get_host_info (MYSQL *mysql)
 }
 
 
-unsigned int
+unsigned int STDCALL
 mysql_get_proto_info (MYSQL *mysql)
 {
   TRACE ("mysql_get_proto_info");
@@ -1392,7 +1395,7 @@ mysql_get_proto_info (MYSQL *mysql)
 }
 
 
-unsigned long
+unsigned long STDCALL
 mysql_thread_id (MYSQL *mysql)
 {
   TRACE ("mysql_thread_id");
@@ -1400,7 +1403,7 @@ mysql_thread_id (MYSQL *mysql)
 }
 
 
-unsigned int
+unsigned int STDCALL
 mysql_thread_safe (void)
 {
   TRACE ("mysql_thread_safe");
@@ -1416,7 +1419,7 @@ mysql_character_set_name (MYSQL *mysql)
 }
 
 
-int
+int STDCALL
 mysql_dump_debug_info (MYSQL *mysql)
 {
   TRACE ("mysql_dump_debug_info UNIMPLEMENTED");
@@ -1424,7 +1427,7 @@ mysql_dump_debug_info (MYSQL *mysql)
 }
 
 
-int
+int STDCALL
 mysql_refresh (MYSQL *mysql, unsigned int refresh_options)
 {
   TRACE ("mysql_refresh UNIMPLEMENTED");
@@ -1432,7 +1435,7 @@ mysql_refresh (MYSQL *mysql, unsigned int refresh_options)
 }
 
 
-int
+int STDCALL
 mysql_kill (MYSQL *mysql, unsigned long pid)
 {
   TRACE ("mysql_kill UNIMPLEMENTED");
@@ -1440,7 +1443,7 @@ mysql_kill (MYSQL *mysql, unsigned long pid)
 }
 
 
-int
+int STDCALL
 mysql_ping (MYSQL *mysql)
 {
   TRACE ("mysql_ping UNIMPLEMENTED");
@@ -1448,7 +1451,7 @@ mysql_ping (MYSQL *mysql)
 }
 
 
-char *
+char * STDCALL
 mysql_stat (MYSQL *mysql)
 {
   TRACE ("mysql_stat UNIMPLEMENTED");
@@ -1456,7 +1459,7 @@ mysql_stat (MYSQL *mysql)
 }
 
 
-int
+int STDCALL
 mysql_options (MYSQL *mysql, enum mysql_option option, const char *arg)
 {
   TRACE ("mysql_options UNIMPLEMENTED");
@@ -1464,7 +1467,7 @@ mysql_options (MYSQL *mysql, enum mysql_option option, const char *arg)
 }
 
 
-unsigned long
+unsigned long STDCALL
 mysql_escape_string (char *to, const char *from, unsigned long from_length)
 {
   TRACE ("mysql_escape_string UNIMPLEMENTED");
@@ -1472,7 +1475,7 @@ mysql_escape_string (char *to, const char *from, unsigned long from_length)
 }
 
 
-unsigned long
+unsigned long 
 mysql_real_escape_string (MYSQL *mysql,
     char *to, const char *from, unsigned long length)
 {
@@ -1481,7 +1484,7 @@ mysql_real_escape_string (MYSQL *mysql,
 }
 
 
-void
+void STDCALL
 mysql_debug (const char *debug)
 {
   TRACE ("mysql_debug UNIMPLEMENTED");
@@ -1489,7 +1492,7 @@ mysql_debug (const char *debug)
 }
 
 
-char *
+char * STDCALL
 mysql_odbc_escape_string (MYSQL *mysql,
     char *to,
     unsigned long to_length,
@@ -1503,7 +1506,7 @@ mysql_odbc_escape_string (MYSQL *mysql,
 }
 
 
-void
+void STDCALL
 myodbc_remove_escape (MYSQL *mysql, char *name)
 {
   TRACE ("myodbc_remove_escape UNIMPLEMENTED");
