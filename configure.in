@@ -41,15 +41,6 @@ AM_MAINTAINER_MODE
 
 ##########################################################################
 ##									##
-##  Version numbers							##
-##									##
-##########################################################################
-mysqllib_version="10:0:0"
-AC_SUBST(mysqllib_version)
-
-
-##########################################################################
-##									##
 ##  Check for C compiler						##
 #									##
 ##########################################################################
@@ -95,6 +86,46 @@ AC_CHECK_FUNCS([memset strchr strdup])
 
 AC_CHECK_LIB([dl], [dlopen])
 AC_CHECK_LIB([z], [gzopen])
+
+
+##########################################################################
+##									##
+##  Version numbers							##
+##									##
+##########################################################################
+
+#
+#  Put separator between options
+#
+AC_ARG_WITH([],[
+MySQL version:],[])
+
+AC_MSG_CHECKING(for MySQL version)
+AC_ARG_WITH(mysql-version,
+[  --with-mysql-version=3  build for MySQL 3.x (default)
+  --with-mysql-version=4  build for MySQL 4.x],
+[
+    case "${withval}" in
+      3)	myversion=3 ;;
+      4)	myversion=4 ;;
+      *)	AC_MSG_ERROR(bad value ${withval} for --with-mysql-version) ;;
+    esac
+],
+[
+    myversion=3	  # set default to MySQL 3.x mode 
+])
+
+if test "x$myversion" = "x3"
+then
+	mysqllib_version="10:0:0"
+	AC_MSG_RESULT(MySQL 3.x compatible mode)
+else
+	mysqllib_version="12:0:0"
+	AC_MSG_RESULT(MySQL 4.x compatible mode)
+fi
+AC_SUBST(mysqllib_version)
+
+
 
 
 ##########################################################################
