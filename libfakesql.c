@@ -302,7 +302,7 @@ _fetch_db_errors (MYSQL *mysql, const char *where, int save)
 	  if (ret != SQL_SUCCESS)
 	    break;
 	  if (save && copy == NULL)
-	    copy = strdup (buf);
+	    copy = strdup ((const char *)buf);
 #ifdef DEBUG
 	  fprintf (stderr, "%s, SQLSTATE=%s\n", buf, sqlstate);
 #endif
@@ -319,7 +319,7 @@ _fetch_db_errors (MYSQL *mysql, const char *where, int save)
 	  if (ret != SQL_SUCCESS)
 	    break;
 	  if (save && copy == NULL)
-	    copy = strdup (buf);
+	    copy = strdup ((const char *)buf);
 #ifdef DEBUG
 	  fprintf (stderr, "%s, SQLSTATE=%s\n", buf, sqlstate);
 #endif
@@ -336,7 +336,7 @@ _fetch_db_errors (MYSQL *mysql, const char *where, int save)
 	  if (ret != SQL_SUCCESS)
 	    break;
 	  if (save && copy == NULL)
-	    copy = strdup (buf);
+	    copy = strdup ((const char *)buf);
 #ifdef DEBUG
 	  fprintf (stderr, "%s, SQLSTATE=%s\n", buf, sqlstate);
 #endif
@@ -756,7 +756,7 @@ _impl_query (
 	  value, (SQLSMALLINT) sizeof (value), &retLen, &lValue);
       if (_trap_sqlerror (mysql, ret, "SQLColAttribute"))
 	return -1;
-      f->table = strdup (value);
+      f->table = strdup ((const char *)value);
 
       /* field.name */
       value[0] = 0;
@@ -764,7 +764,7 @@ _impl_query (
 	  value, (SQLSMALLINT) sizeof (value), &retLen, &lValue);
       if (_trap_sqlerror (mysql, ret, "SQLColAttribute"))
 	return -1;
-      f->name = strdup (value);
+      f->name = strdup ((const char *)value);
 
       /* field.length */
       lValue = 0;
