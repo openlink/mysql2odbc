@@ -24,10 +24,10 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <memory.h>
-#include <malloc.h>
 
 #ifndef WIN32
 # include <getopt.h>
