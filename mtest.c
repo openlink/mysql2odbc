@@ -7,7 +7,7 @@
  *
  *  mysql2odbc - A MySQL to ODBC bridge library
  *  
- *  Copyright (C) 2003 by OpenLink Software <iodbc@openlinksw.com>
+ *  Copyright (C) 2003-2012 OpenLink Software <iodbc@openlinksw.com>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Library General Public
@@ -24,10 +24,10 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <memory.h>
-#include <malloc.h>
 
 #ifndef WIN32
 # include <getopt.h>

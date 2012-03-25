@@ -5,7 +5,7 @@
  *
  *  mysql2odbc - A MySQL to ODBC bridge library
  *  
- *  Copyright (C) 2003 by OpenLink Software <iodbc@openlinksw.com>
+ *  Copyright (C) 2003-2012 OpenLink Software <iodbc@openlinksw.com>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Library General Public
@@ -127,7 +127,7 @@ _alloc_db (MYSQL *mysql)
 {
   TSQLPrivate *pDB;
 
-  DBOF(mysql) = pDB = (TSQLPrivate *) calloc (1, sizeof (TSQLPrivate));
+  pDB = (TSQLPrivate *) calloc (1, sizeof (TSQLPrivate));
   if (pDB == NULL)
     {
       _set_error (mysql, CR_OUT_OF_MEMORY);
@@ -139,6 +139,12 @@ _alloc_db (MYSQL *mysql)
   pDB->hStmt = SQL_NULL_HSTMT;
 
   _set_error (mysql, 0);
+
+#if 0
+  DBOF(mysql) = pDB;
+#else
+  mysql->net.vio = pDB;
+#endif
 
   return 0;
 }
@@ -166,7 +172,11 @@ _free_db (MYSQL *mysql)
       pDB->hStmt = SQL_NULL_HSTMT;
       pDB->bConnected = 0;
       free (pDB);
+#if 0
       DBOF(mysql) = NULL;
+#else
+      mysql->net.vio = NULL;
+#endif
     }
 }
 
@@ -292,7 +302,7 @@ _fetch_db_errors (MYSQL *mysql, const char *where, int save)
 	  if (ret != SQL_SUCCESS)
 	    break;
 	  if (save && copy == NULL)
-	    copy = strdup (buf);
+	    copy = strdup ((const char *)buf);
 #ifdef DEBUG
 	  fprintf (stderr, "%s, SQLSTATE=%s\n", buf, sqlstate);
 #endif
@@ -309,7 +319,7 @@ _fetch_db_errors (MYSQL *mysql, const char *where, int save)
 	  if (ret != SQL_SUCCESS)
 	    break;
 	  if (save && copy == NULL)
-	    copy = strdup (buf);
+	    copy = strdup ((const char *)buf);
 #ifdef DEBUG
 	  fprintf (stderr, "%s, SQLSTATE=%s\n", buf, sqlstate);
 #endif
@@ -326,7 +336,7 @@ _fetch_db_errors (MYSQL *mysql, const char *where, int save)
 	  if (ret != SQL_SUCCESS)
 	    break;
 	  if (save && copy == NULL)
-	    copy = strdup (buf);
+	    copy = strdup ((const char *)buf);
 #ifdef DEBUG
 	  fprintf (stderr, "%s, SQLSTATE=%s\n", buf, sqlstate);
 #endif
@@ -589,7 +599,7 @@ _impl_init (MYSQL *mysql)
 	return NULL;
       mysql->free_me = 1;
     }
-  memset (mysql, 0, sizeof (mysql));
+  memset (mysql, 0, sizeof (MYSQL));
 
   return mysql;
 }
@@ -695,7 +705,7 @@ _impl_query (
 {
   TSQLPrivate *pDB;
   SQLSMALLINT col, numCols;
-  SQLINTEGER numRows;
+  SQLLEN numRows;
   SQLRETURN ret;
   MYSQL_FIELD *f;
 
@@ -733,7 +743,7 @@ _impl_query (
   /* Query field properties */
   for (col = 1; col <= numCols; col++, f++)
     {
-      SQLINTEGER lValue;
+      SQLLEN lValue;
       SQLSMALLINT retLen;
       SQLCHAR value[128];
 
@@ -746,7 +756,7 @@ _impl_query (
 	  value, (SQLSMALLINT) sizeof (value), &retLen, &lValue);
       if (_trap_sqlerror (mysql, ret, "SQLColAttribute"))
 	return -1;
-      f->table = strdup (value);
+      f->table = strdup ((const char *)value);
 
       /* field.name */
       value[0] = 0;
@@ -754,7 +764,7 @@ _impl_query (
 	  value, (SQLSMALLINT) sizeof (value), &retLen, &lValue);
       if (_trap_sqlerror (mysql, ret, "SQLColAttribute"))
 	return -1;
-      f->name = strdup (value);
+      f->name = strdup ((const char *)value);
 
       /* field.length */
       lValue = 0;

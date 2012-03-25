@@ -1,9 +1,59 @@
-2003-05-15 15:38  source
+2012-03-25
 
-	* Added generated and support files in case we do not have automake
-	  autoconf and libtool installed on the machine (pvk)
-	
-2003-05-15 15:22  source
+    Updated version number to 1.0
 
-	* Committed initial source code into cvs (pmn)
-	
+    Fixed wrong size for memset
+
+    Ignore tags file
+
+    Fixed compiler warnings
+
+    Fixed use stdlib.h to get malloc/calloc prototypes
+
+    Fixed use of SQLLEN instead of SQLINTEGER
+
+    Fixed issue with lvalue warning on some compilers
+
+    Updated copyright year to 2012
+
+    Updated to newer version of auto tools
+
+2003-06-21
+
+    * Added new options for selecting MySQL 3 or 4 (pvk)
+
+2003-06-20
+
+    * Remove semicolon from end of line (th)
+
+2003-05-27
+
+    * Added STDCALL for windows build (zt)
+
+2003-05-21
+
+    * Fixed minor bugs
+    * Added TRACE macro to all calls
+    * Implemented new functions
+      (zt)
+
+2003-05-21
+
+    * Added zdravko (pvk)
+
+2003-05-15
+
+    *** empty log message ***
+
+2003-05-15
+
+    * Added generated and support files in case we do not have automake
+      autoconf and libtool installed on the machine (pvk)
+
+2003-05-15
+
+    *** empty log message ***
+
+2003-05-15
+
+    * Committed initial source code into cvs (pmn)
