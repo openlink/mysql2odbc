@@ -599,7 +599,7 @@ _impl_init (MYSQL *mysql)
 	return NULL;
       mysql->free_me = 1;
     }
-  memset (mysql, 0, sizeof (mysql));
+  memset (mysql, 0, sizeof (MYSQL));
 
   return mysql;
 }
