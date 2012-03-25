@@ -25,6 +25,7 @@ config.h
 stamp-h1
 INSTALL
 admin/
+tags
 
 #
 #  Binaries
