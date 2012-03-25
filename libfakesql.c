@@ -127,7 +127,7 @@ _alloc_db (MYSQL *mysql)
 {
   TSQLPrivate *pDB;
 
-  DBOF(mysql) = pDB = (TSQLPrivate *) calloc (1, sizeof (TSQLPrivate));
+  pDB = (TSQLPrivate *) calloc (1, sizeof (TSQLPrivate));
   if (pDB == NULL)
     {
       _set_error (mysql, CR_OUT_OF_MEMORY);
@@ -139,6 +139,12 @@ _alloc_db (MYSQL *mysql)
   pDB->hStmt = SQL_NULL_HSTMT;
 
   _set_error (mysql, 0);
+
+#if 0
+  DBOF(mysql) = pDB;
+#else
+  mysql->net.vio = pDB;
+#endif
 
   return 0;
 }
@@ -166,7 +172,11 @@ _free_db (MYSQL *mysql)
       pDB->hStmt = SQL_NULL_HSTMT;
       pDB->bConnected = 0;
       free (pDB);
+#if 0
       DBOF(mysql) = NULL;
+#else
+      mysql->net.vio = NULL;
+#endif
     }
 }
 
