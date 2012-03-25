@@ -705,7 +705,7 @@ _impl_query (
 {
   TSQLPrivate *pDB;
   SQLSMALLINT col, numCols;
-  SQLINTEGER numRows;
+  SQLLEN numRows;
   SQLRETURN ret;
   MYSQL_FIELD *f;
 
@@ -743,7 +743,7 @@ _impl_query (
   /* Query field properties */
   for (col = 1; col <= numCols; col++, f++)
     {
-      SQLINTEGER lValue;
+      SQLLEN lValue;
       SQLSMALLINT retLen;
       SQLCHAR value[128];
 
