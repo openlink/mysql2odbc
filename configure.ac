@@ -1,4 +1,4 @@
-AC_PREREQ(2.54)
+AC_PREREQ(2.59)
 AC_REVISION($Id$)
 #
 #  mysql2odbc - A MySQL to ODBC bridge library
@@ -26,13 +26,11 @@ AC_REVISION($Id$)
 ##  Initialization							##
 ##									##
 ##########################################################################
-AC_INIT([MySQL to ODBC Bridge], 
-	[0.99.2], 
-	[iodbc@openlinksw.com], 
-	[mysql2odbc])
+AC_INIT([MySQL to ODBC Bridge],[0.99.2],[iodbc@openlinksw.com],[mysql2odbc])
 
 AC_CONFIG_SRCDIR([libfakesql.c])
 AC_CONFIG_AUX_DIR([admin])
+AC_CONFIG_MACRO_DIR([admin])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE([mysql2odbc], [0.99.2])
 AC_CANONICAL_HOST
@@ -46,7 +44,7 @@ AM_MAINTAINER_MODE
 ##########################################################################
 AC_PROG_CC
 AC_PROG_CC_C_O
-AC_PROG_CC_STDC
+
 AC_PROG_CPP
 AC_LANG([C])
 
@@ -73,7 +71,7 @@ AM_PROG_LIBTOOL
 ##########################################################################
 
 AC_HEADER_STDC
-AC_CHECK_HEADERS([malloc.h memory.h string.h])
+AC_CHECK_HEADERS([memory.h string.h])
 
 
 ##########################################################################
