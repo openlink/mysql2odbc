@@ -3,7 +3,7 @@ AC_REVISION($Id$)
 #
 #  mysql2odbc - A MySQL to ODBC bridge library
 #  
-#  Copyright (C) 2003-2012 OpenLink Software <iodbc@openlinksw.com>
+#  Copyright (C) 2003-2013 OpenLink Software <iodbc@openlinksw.com>
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Library General Public
